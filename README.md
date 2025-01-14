@@ -1,5 +1,5 @@
 #uwwtd queries
-- Francisca S. Braga ("fsb@skanderborgforsyning.dk" )
+- Francisca S. Braga (fsb@skanderborgforsyning.dk)
 - Lluís Bosch (lbosch@icra.cat)
 - Lluís Corominas (lcorominas@icra.cat)
 
