@@ -11,4 +11,5 @@ git push
 # -vv incrementa verbositat
 # -r  actua recursivament
 rsync -hPvr \
+  --exclude ".git/" \
   . root@icra.loading.net:/var/www/vhosts/icradev.cat/uwwtd-queries.icradev.cat
