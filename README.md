@@ -1,3 +1,5 @@
+status: work in progress (project started January 2025)
+
 # uwwtd queries
 - Francisca S. Braga (fsb@skanderborgforsyning.dk)
 - Lluís Bosch (lbosch@icra.cat)
