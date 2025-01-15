@@ -1,9 +1,12 @@
-#uwwtd queries
+# uwwtd queries
 - Francisca S. Braga (fsb@skanderborgforsyning.dk)
 - Lluís Bosch (lbosch@icra.cat)
 - Lluís Corominas (lcorominas@icra.cat)
 
 Simple PHP website and UWWTD sqlite database that interact via queries:
+
+Since this database is often updated, just changing the database file will get
+the updated results instead of having to redo the work manually.
 
 The user can click each query and see the resulting table.
 

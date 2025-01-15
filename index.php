@@ -3,6 +3,11 @@
   <title>UWWTD queries</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head><body>
+
+<nav>
+  <a href="//github.com/icra/uwwtd-queries">github.com/icra/uwwtd-queries</a>
+</nav>
+
 <h1>UWWTD queries</h1>
 
 <div id=app>
