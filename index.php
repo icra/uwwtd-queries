@@ -31,6 +31,13 @@
         <a :href="`query.php?query=${encodeURI(val)}`">GO!</a>
       </td>
     </tr>
+    <tr>
+      <td>distance</td>
+      <td>distance between UWWTPS and Aglommerations</td>
+      <td>
+        <a href="distance.php">GO!</a>
+      </td>
+    </tr>
   </table>
 </div>
 

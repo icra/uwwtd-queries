@@ -21,7 +21,9 @@
 
 <?php
   //GET ?query=query default value
-  $query = isset($_GET["query"]) ? $_GET["query"] : false;
+  $query   = isset($_GET["query"])   ? $_GET["query"]   : false;
+  $db_name = isset($_GET["db_name"]) ? $_GET["db_name"] : "UWWTD_TreatmentPlants.gpkg.sqlite";
+
   if(!$query){
     //default query
     $query="
@@ -36,7 +38,7 @@
   echo "<code>$query</code>";
 
   //connect with database
-  $db  = new SQLite3("UWWTD_TreatmentPlants.gpkg.sqlite",SQLITE3_OPEN_READONLY);
+  $db  = new SQLite3($db_name,SQLITE3_OPEN_READONLY);
 
   //execute actual query
   $res = $db->query($query) or die(print_r($db->lastErrorMsg(), true));
