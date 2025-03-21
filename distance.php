@@ -45,8 +45,14 @@
 ?>
 
 <?php
+  //connect with database
+  $db = new SQLite3("v9.accdb.sqlite",SQLITE3_OPEN_READONLY);
+
+  //distance to filter results
+  $distance_kms = isset($_GET["distance_kms"])? $_GET["distance_kms"] : 20;
+
   //GET ?query=query default value
-  $query = "
+  $query="
     SELECT
       T_UWWTPS.uwwCode,
       T_UWWTPS.uwwLongitude,
@@ -54,12 +60,13 @@
       T_Agglomerations.aggCode,
       T_Agglomerations.aggLongitude,
       T_Agglomerations.aggLatitude,
-      T_UWWTPS.uwwCapacity,
-      T_UWWTPS.uwwBeginLife
+      T_UWWTPS.uwwBeginLife,
+      T_UWWTPS.uwwLoadEnteringUWWTP,
+      T_UWWTPS.uwwCapacity
     FROM
       T_UWWTPS, T_Agglomerations, T_UWWTPAgglos
     WHERE
-      T_UWWTPAgglos.aucUwwCode = T_UWWTPS.uwwCode AND 
+      T_UWWTPAgglos.aucUwwCode = T_UWWTPS.uwwCode AND
       T_UWWTPAgglos.aucAggCode = T_Agglomerations.aggCode AND
       T_UWWTPS.uwwState=1 AND
       (
@@ -71,9 +78,6 @@
 
   //display sql query text
   echo "<code><pre>$query</pre></code>";
-
-  //connect with database
-  $db = new SQLite3("v9.accdb.sqlite",SQLITE3_OPEN_READONLY);
 
   //execute actual query
   $res = $db->query($query) or die(print_r($db->lastErrorMsg(), true));
@@ -89,9 +93,13 @@
   $n = num_rows($res);
   echo "
     <hr>$n results
-
-    (seeing only results > 14 kms)
+    (<span id=n_results></span> results > $distance_kms kms)
   ";
+  for($kms=10;$kms<100;$kms+=5){
+    if($kms==$distance_kms) echo "<b>";
+    echo"<a href='distance.php?distance_kms=$kms'>$kms km</a> | ";
+    if($kms==$distance_kms) echo "</b>";
+  }
 ?>
 
 <table border=1><?php
@@ -114,17 +122,22 @@
     $lon2 = $row["aggLongitude"];
     $dist_kms = distance($lat1,$lon1, $lat2,$lon2);
 
-    if($dist_kms > 14){
+    if($dist_kms > $distance_kms){
       echo "<tr>";
       echo "<td>$j</td>";
       foreach($row as $key=>$val){
         echo "<td>$val</td>";
       }
       echo "<td>$dist_kms</td>";
+      echo "</tr>";
       $j++;
     }
 
-    echo "</tr>";
     $i++;
   }
+  $j--;
+
+  echo "<script>
+    document.querySelector('#n_results').innerHTML=$j;
+  </script>";
 ?></table>
