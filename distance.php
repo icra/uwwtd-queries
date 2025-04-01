@@ -50,21 +50,18 @@
   $db = new SQLite3("v9.accdb.sqlite",SQLITE3_OPEN_READONLY);
 
   $query = isset($_GET["query"]) ? $_GET["query"] : false;
+
+  //distance to filter results (threshhold)
+  $distance_kms = isset($_GET["distance_kms"])? $_GET["distance_kms"] : 20;
+
+  //limit results
+  $limit_results = isset($_GET["limit_results"])? $_GET["limit_results"] : 10;
+
   if(!$query){
     //default query
     $query="
-      SELECT
-        T_UWWTPS.uwwCode,
-        T_UWWTPS.uwwLongitude,
-        T_UWWTPS.uwwLatitude,
-        T_Agglomerations.aggCode,
-        T_Agglomerations.aggLongitude,
-        T_Agglomerations.aggLatitude,
-        T_UWWTPS.uwwBeginLife,
-        T_UWWTPS.uwwLoadEnteringUWWTP,
-        T_UWWTPS.uwwCapacity
-      FROM
-        T_UWWTPS, T_Agglomerations, T_UWWTPAgglos
+      SELECT *
+      FROM T_UWWTPS, T_Agglomerations, T_UWWTPAgglos
       WHERE
         T_UWWTPAgglos.aucUwwCode = T_UWWTPS.uwwCode AND
         T_UWWTPAgglos.aucAggCode = T_Agglomerations.aggCode AND
@@ -72,13 +69,11 @@
         (
           T_UWWTPS.uwwBeginLife LIKE '19%'
           OR
-          T_UWWTPS.uwwLoadEnteringUWWTP > uwwCapacity
-        );
+          T_UWWTPS.uwwLoadEnteringUWWTP > T_UWWTPS.uwwCapacity
+        )
+      ;
     ";
   }
-
-  //distance to filter results
-  $distance_kms = isset($_GET["distance_kms"])? $_GET["distance_kms"] : 20;
 
   //display sql query text
   echo "<code><pre>$query</pre></code>";
@@ -95,15 +90,17 @@
     return $nrows;
   }
   $n = num_rows($res);
-  echo "
-    <hr>$n results
-    (<span id=n_results></span> results > $distance_kms kms)
+
+  echo"<hr>
+    <ul>
+      <li>Limit of results is set to $limit_results
+      <li>Threshold distance is set to $distance_kms
+    </ul>
   ";
-  for($kms=10;$kms<100;$kms+=5){
-    if($kms==$distance_kms) echo "<b>";
-    echo"<a href='distance.php?distance_kms=$kms'>$kms km</a> | ";
-    if($kms==$distance_kms) echo "</b>";
-  }
+
+  echo "
+    <hr>$n results (<span id=n_results></span> results > $distance_kms kms)
+  ";
 ?>
 
 <table border=1><?php
@@ -134,11 +131,13 @@
       }
       echo "<td>$dist_kms</td>";
       echo "</tr>";
+      if($limit_results && $j>=$limit_results){
+        break;
+      }
       $j++;
     }
     $i++;
   }
-  $j--;
 
   echo"
     <script>

@@ -10,15 +10,13 @@
 
 <div id=app>
   <table border=1>
-    <thead>
-      <tr>
-        <td>default test query</td>
-        <td>(displays all columns, first 10 results)</td>
-        <td>
-          <a href="query.php">GO!</a>
-        </td>
-      </tr>
-    </thead>
+    <tr>
+      <td>default test query</td>
+      <td>(displays all columns, first 10 results)</td>
+      <td>
+        <a href="query.php">GO!</a>
+      </td>
+    </tr>
 
     <tr v-for="val,key in queries">
       <td>{{key}}</td>
@@ -32,6 +30,15 @@
         <a :href="`query.php?query=${encodeURI(val)}`">GO!</a>
       </td>
     </tr>
+
+    <tr>
+      <td>default test query for distance</td>
+      <td>(displays all columns, first 10 results)</td>
+      <td>
+        <a href="distance.php">GO!</a>
+      </td>
+    </tr>
+
     <tr v-for="val,key in queries_distance">
       <td>{{key}}</td>
       <td>
@@ -41,7 +48,25 @@
         ></textarea>
       </td>
       <td>
-        <a :href="`distance.php?query=${encodeURI(val)}`">GO!</a>
+        <table>
+          <tr>
+            <td>Threshold distance (kms)
+            <td><input type=number v-model="distance_kms">
+          </tr>
+          <tr>
+            <td>Nº of results (0=no limit):
+            <td><input type=number v-model="limit_results">
+          </tr>
+          <tr>
+            <td>
+              <a :href="`
+                distance.php?query=${encodeURI(val)}
+                &distance_kms=${distance_kms}
+                &limit_results=${limit_results}
+              `">GO!</a>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
@@ -110,9 +135,12 @@
           (
             T_UWWTPS.uwwBeginLife LIKE '19%'
             OR
-            T_UWWTPS.uwwLoadEnteringUWWTP > uwwCapacity
+            T_UWWTPS.uwwLoadEnteringUWWTP > T_UWWTPS.uwwCapacity
           );
       `,
     },
+
+    limit_results:0,
+    distance_kms:20,
   }},
 }).mount("#app");</script>
