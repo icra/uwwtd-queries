@@ -3,22 +3,23 @@
   <title>UWWTD queries</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head><body>
-
 <nav>
   <a href="//github.com/icra/uwwtd-queries">github.com/icra/uwwtd-queries</a>
 </nav>
-
 <h1>UWWTD queries</h1>
 
 <div id=app>
   <table border=1>
-    <tr>
-      <td>default test query</td>
-      <td>(displays all columns, first 10 results)</td>
-      <td>
-        <a href="query.php">GO!</a>
-      </td>
-    </tr>
+    <thead>
+      <tr>
+        <td>default test query</td>
+        <td>(displays all columns, first 10 results)</td>
+        <td>
+          <a href="query.php">GO!</a>
+        </td>
+      </tr>
+    </thead>
+
     <tr v-for="val,key in queries">
       <td>{{key}}</td>
       <td>
@@ -31,11 +32,16 @@
         <a :href="`query.php?query=${encodeURI(val)}`">GO!</a>
       </td>
     </tr>
-    <tr>
-      <td>distance</td>
-      <td>distance between UWWTPS and Aglommerations</td>
+    <tr v-for="val,key in queries_distance">
+      <td>{{key}}</td>
       <td>
-        <a href="distance.php">GO!</a>
+        <textarea
+          v-model="queries_distance[key]"
+          style="field-sizing:content"
+        ></textarea>
+      </td>
+      <td>
+        <a :href="`distance.php?query=${encodeURI(val)}`">GO!</a>
       </td>
     </tr>
   </table>
@@ -81,6 +87,31 @@
           uwwState = 1 AND
           uwwLoadEnteringUWWTP > uwwCapacity
         ORDER BY uwwBeginLife ASC;
+      `,
+    },
+    queries_distance:{
+      "Distance between UWWTPS and Aglommerations":`
+        SELECT
+          T_UWWTPS.uwwCode,
+          T_UWWTPS.uwwLongitude,
+          T_UWWTPS.uwwLatitude,
+          T_Agglomerations.aggCode,
+          T_Agglomerations.aggLongitude,
+          T_Agglomerations.aggLatitude,
+          T_UWWTPS.uwwBeginLife,
+          T_UWWTPS.uwwLoadEnteringUWWTP,
+          T_UWWTPS.uwwCapacity
+        FROM
+          T_UWWTPS, T_Agglomerations, T_UWWTPAgglos
+        WHERE
+          T_UWWTPAgglos.aucUwwCode = T_UWWTPS.uwwCode AND
+          T_UWWTPAgglos.aucAggCode = T_Agglomerations.aggCode AND
+          T_UWWTPS.uwwState=1 AND
+          (
+            T_UWWTPS.uwwBeginLife LIKE '19%'
+            OR
+            T_UWWTPS.uwwLoadEnteringUWWTP > uwwCapacity
+          );
       `,
     },
   }},
