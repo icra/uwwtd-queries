@@ -93,8 +93,8 @@
 
   echo"<hr>
     <ul>
-      <li>Limit of results is set to $limit_results
-      <li>Threshold distance is set to $distance_kms
+      <li>Limit of results is set to $limit_results.
+      <li>Threshold distance is set to $distance_kms kms.
     </ul>
   ";
 
